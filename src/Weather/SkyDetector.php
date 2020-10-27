@@ -12,17 +12,6 @@ class SkyDetector extends WeatherDetectorInterface
     'detail' => [],
   ];
 
-  public function getWeather(array $weatherData): Sky
-  {
-    foreach ($weatherData as $data) :
-      foreach ($data['properties'] as $property) :
-        $this->detectValues($property, $data['date']);
-      endforeach;
-    endforeach;
-
-    return $this->outputWeather();
-  }
-
   protected function detectValues(SimpleXMLElement $property, array $dateList): void
   {
     $titlePattern = [
