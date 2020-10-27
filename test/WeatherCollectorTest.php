@@ -14,7 +14,7 @@ class WeatherCollectorTest extends TestCase
     $reportList = new ReportList();
     $reportList->addReport($xml);
 
-    $weatherCollector = new WeatherCollector();
+    $weatherCollector = new WeatherCollector(['八丈島', '伊豆諸島南部']);
     $weatherCollector->loadReports($reportList);
   }
 }

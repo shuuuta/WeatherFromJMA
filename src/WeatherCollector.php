@@ -16,10 +16,17 @@ class WeatherCollector
     '地点予報',
     '区域予報',
   ];
-  private $areaTags = [
-    '八丈島',
-    '伊豆諸島南部',
-  ];
+  private $areaTags = [];
+
+  public function __construct(array $areaTags)
+  {
+    foreach ($areaTags as $areaTag):
+      if (!is_string($areaTag)):
+        throw new InvalidArgumentException('WeatherController only accepts an array of string. Input array includes ' . $areaTag);
+      endif;
+      $this->areaTags[] = $areaTag;
+    endforeach;
+  }
 
   public function loadReports(ReportList $reportList)
   {
