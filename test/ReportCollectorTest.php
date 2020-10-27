@@ -10,32 +10,6 @@ use WeatherFromJMA\ReportList;
 
 class ReportCollectorTest extends TestCase
 {
-  public function testSetArea()
-  {
-    $reportCollectotr = new ReportCollector();
-    $testValue = 'test value';
-    $reportCollectotr->setArea($testValue);
-
-    $refrectionClass = new ReflectionClass(get_class($reportCollectotr));
-    $property = $refrectionClass->getProperty('area');
-    $property->setAccessible(true);
-
-    $this->assertSame($testValue, $property->getValue($reportCollectotr));
-  }
-
-  public function testSetPoint()
-  {
-    $reportCollectotr = new ReportCollector();
-    $testValue = 'test value';
-    $reportCollectotr->setPoint($testValue);
-
-    $refrectionClass = new ReflectionClass(get_class($reportCollectotr));
-    $property = $refrectionClass->getProperty('point');
-    $property->setAccessible(true);
-
-    $this->assertSame($testValue, $property->getValue($reportCollectotr));
-  }
-
   public function testSetDate()
   {
     $reportCollectotr = new ReportCollector();

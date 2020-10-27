@@ -10,28 +10,16 @@ class ReportCollector
 {
   protected string $url = 'https://www.data.jma.go.jp/developer/xml/feed/regular_l.xml';
 
-  protected string $area;
-  protected string $point;
   protected DateTime $date;
 
   protected ReportList $reportList;
 
   public array $xmlData = [];
 
-  public function __construct()
+  public function __construct(string $targetDate = '')
   {
-    $this->date = new DateTime();
+    $this->date = $targetDate ? $this->setDate($targetDate) : new DateTime();
     $this->reportList = new ReportList();
-  }
-
-  public function setArea(string $area): void
-  {
-    $this->area = $area;
-  }
-
-  public function setPoint(string $point): void
-  {
-    $this->point = $point;
   }
 
   public function setDate(string $date): void
@@ -50,7 +38,7 @@ class ReportCollector
 
     $this->getSubReports($baseXml);
 
-    foreach ($this->xmlData as $xmlData):
+    foreach ($this->xmlData as $xmlData) :
       $subXMLString = $this->curlGetContents($xmlData['link']);
       $this->reportList->addReport(simplexml_load_string($subXMLString));
     endforeach;
