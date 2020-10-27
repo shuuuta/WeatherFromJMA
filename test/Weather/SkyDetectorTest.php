@@ -3,20 +3,20 @@
 namespace WeatherFromJMA\Test\Weather;
 
 use PHPUnit\Framework\TestCase;
-use WeatherFromJMA\Weather\Wind;
-use WeatherFromJMA\Weather\WindDetector;
+use WeatherFromJMA\Weather\Sky;
+use WeatherFromJMA\Weather\SkyDetector;
 
-class WindDetectorTest extends TestCase
+class SkyDetectorTest extends TestCase
 {
   use LoadReportTrait;
 
-  public function testGetWeatherReturnWindClass()
+  public function testGetWeatherReturnSkyClass()
   {
     $weatherList = $this->LoadReport();
-    $detector =  new WindDetector();
+    $detector =  new SkyDetector();
     $weather = $detector->getWeather($weatherList);
 
-    $this->assertInstanceOf(Wind::class, $weather);
+    $this->assertInstanceOf(Sky::class, $weather);
   }
 
   public function testReturnedWeatherHasCorrectData()
