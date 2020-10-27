@@ -5,11 +5,13 @@ namespace WeatherFromJMA;
 use DateTime;
 use SimpleXMLElement;
 use WeatherFromJMA\Weather\SkyDetector;
+use WeatherFromJMA\Weather\WindDetector;
 
 class WeatherCollector
 {
   private $detectors = [
     SkyDetector::class,
+    WindDetector::class,
   ];
 
   private $areaTypeTags = [
@@ -33,7 +35,8 @@ class WeatherCollector
     $weathers = [];
 
     foreach ($reportList as $report) :
-      $weathers = array_merge($weathers, $this->loadReport($report));
+      $weatherList = $this->loadReport($report);
+      $weathers = array_merge($weathers, $this->getWeathers($weatherList));
     endforeach;
 
     return $weathers;
@@ -52,7 +55,7 @@ class WeatherCollector
       endforeach;
     endforeach;
 
-    return $this->getWeathers($weatherList);
+    return $weatherList;
   }
 
   private function getWeathers(array $weatherData): array
