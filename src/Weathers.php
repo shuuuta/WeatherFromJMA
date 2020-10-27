@@ -9,13 +9,12 @@ class Weathers implements IteratorAggregate
 {
   protected array $weathers = [];
 
-  public function fetchWeathers(array $areaTags, string $targetDate = ''): array
+  public function fetchWeathers(array $areaTags, string $targetDate = ''): void
   {
     $reportList = new ReportCollector($targetDate);
 
     $weatherCollector = new WeatherCollector($areaTags);
     $weathers = $weatherCollector->loadReeports($reportList);
-    return $weathers;
   }
 
   public function getIterator(): ArrayIterator
