@@ -4,12 +4,14 @@
 
 ```plantuml
 @startuml
-WeatherFromJMA o-> WeathersInterface
-WeathersInterface o--> WeatherInterface
-ReportList <-o WeatherFromJMA
+WeatherCollector o-> WeathersInterface
+WeathersInterface o--> Weather.WeatherDetectorInterface
+Weather.WeatherInterface o-> Weather.WeatherDetectorInterface
+ReportList <-o WeatherCollector
 ReportCollector o-> ReportList
+ReportList <--o Report
 
-class WeatherFromJMA {
+class WeatherCollector {
 	WeathersInterface getReports()
 }
 
@@ -25,29 +27,50 @@ class ReportCollector {
 class ReportList {
 }
 
+class Report {
+	string getTitle()
+	dateTime getDate()
+	SimpleXMLElement getRaw()
+}
+
 class Weathers implements WeathersInterface {
 	void add(Weather: weather)
 }
 
 interface WeathersInterface extends IteratorAggregate {
 }
+namespace Weather {
+	interface WeatherDetectorInterface {
+	}
+	class SkyDetector implements WeatherDetectorInterface {
+	}
+	class WindDetector implements WeatherDetectorInterface {
+	}
+	class WaveDetector implements WeatherDetectorInterface {
+	}
+	class RainDetector implements WeatherDetectorInterface {
+	}
+	class TemperatureDetector implements WeatherDetectorInterface {
+	}
 
-interface WeatherInterface {
-	DateTime getDate()
-	string getSentence()
-	string getValue()
-	int getCode()
-}
+	interface WeatherInterface {
+		void loadReport(.Report report)
+		DateTime getDate()
+		string getSentence()
+		string getValue()
+		int getCode()
+	}
 
-class SkyWeather implements WeatherInterface {
-}
-class WindWeather implements WeatherInterface {
-}
-class WaveWeather implements WeatherInterface {
-}
-class RainWeather implements WeatherInterface {
-}
-class TemperatureWeather implements WeatherInterface {
+	class Sky implements WeatherInterface {
+	}
+	class Wind implements WeatherInterface {
+	}
+	class Wave implements WeatherInterface {
+	}
+	class Rain implements WeatherInterface {
+	}
+	class Temperature implements WeatherInterface {
+	}
 }
 
 @enduml

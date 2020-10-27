@@ -64,6 +64,8 @@ class ReportCollectorTest extends TestCase
   {
     $reportCollectotr = new ReportCollector();
 
+    $reportCollectotr->setDate('20201020');
+
     $result = $reportCollectotr->getReports();
 
     $this->assertInstanceOf('\\' . ReportList::class, $result);

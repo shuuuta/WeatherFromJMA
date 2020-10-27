@@ -14,12 +14,14 @@ class ReportCollector
   protected string $point;
   protected DateTime $date;
 
+  protected ReportList $reportList;
+
   public array $xmlData = [];
 
   public function __construct()
   {
     $this->date = new DateTime();
-    $this->weathers = new Weathers();
+    $this->reportList = new ReportList();
   }
 
   public function setArea(string $area): void
@@ -39,7 +41,7 @@ class ReportCollector
 
   public function getReports(): ReportList
   {
-    $xmlString = $this->curlGetCntents($this->url);
+    $xmlString = $this->curlGetContents($this->url);
     $baseXml = simplexml_load_string($xmlString);
 
     if (!$baseXml) {
@@ -47,11 +49,16 @@ class ReportCollector
     }
 
     $this->getSubReports($baseXml);
-    //var_dump($this->xmlData);
-    return new ReportList();
+
+    foreach ($this->xmlData as $xmlData):
+      $subXMLString = $this->curlGetContents($xmlData['link']);
+      $this->reportList->addReport(simplexml_load_string($subXMLString));
+    endforeach;
+
+    return $this->reportList;
   }
 
-  protected function curlGetCntents(string $url): string
+  protected function curlGetContents(string $url): string
   {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

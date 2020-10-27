@@ -19,7 +19,7 @@ class ReportList implements IteratorAggregate
 
   public function addReport(SimpleXMLElement $report): void
   {
-    $this->reports[] = $report;
+    $this->reports[] = new Report($report);
   }
 
   public function getIterator(): ArrayIterator
