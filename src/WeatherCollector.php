@@ -20,22 +20,26 @@ class WeatherCollector
 
   public function __construct(array $areaTags)
   {
-    foreach ($areaTags as $areaTag):
-      if (!is_string($areaTag)):
+    foreach ($areaTags as $areaTag) :
+      if (!is_string($areaTag)) :
         throw new InvalidArgumentException('WeatherController only accepts an array of string. Input array includes ' . $areaTag);
       endif;
       $this->areaTags[] = $areaTag;
     endforeach;
   }
 
-  public function loadReports(ReportList $reportList)
+  public function loadReports(ReportList $reportList): array
   {
+    $weathers = [];
+
     foreach ($reportList as $report) :
-      $this->loadReport($report);
+      $weathers = array_merge($weathers, $this->loadReport($report));
     endforeach;
+
+    return $weathers;
   }
 
-  public function loadReport(Report $report): array
+  private function loadReport(Report $report): array
   {
     $weatherList = [];
 
@@ -51,7 +55,7 @@ class WeatherCollector
     return $this->getWeathers($weatherList);
   }
 
-  private function getWeathers(array $weatherData):array
+  private function getWeathers(array $weatherData): array
   {
     $weathers = [];
 
@@ -63,21 +67,21 @@ class WeatherCollector
     return $weathers;
   }
 
-  private function getWeatherData(SimpleXMLElement $TimeSeriesInfo) :array
+  private function getWeatherData(SimpleXMLElement $TimeSeriesInfo): array
   {
     $weatherData = [];
 
     foreach ($TimeSeriesInfo->Item as $item) :
-      if ($this->isArea($item)):
-      //dev: Itemないに何のエリアがあるか確認
-      //if (true):
-      //  foreach ($item->Area as $area):
-      //    $areaName = $area->Name[0];
-      //  endforeach;
-      //  foreach ($item->Station as $station):
-      //    $areaName = $station->Name[0];
-      //  endforeach;
-      //  echo $areaName . PHP_EOL;
+      if ($this->isArea($item)) :
+        //dev: Itemないに何のエリアがあるか確認
+        //if (true):
+        //  foreach ($item->Area as $area):
+        //    $areaName = $area->Name[0];
+        //  endforeach;
+        //  foreach ($item->Station as $station):
+        //    $areaName = $station->Name[0];
+        //  endforeach;
+        //  echo $areaName . PHP_EOL;
 
         foreach ($item->Kind as $kind) :
           $property = $kind->Property[0];
@@ -114,14 +118,14 @@ class WeatherCollector
 
   private function isArea(SimpleXMLElement $item): bool
   {
-      $areaName;
-      foreach ($item->Area as $area):
-        $areaName = $area->Name[0];
-      endforeach;
-      foreach ($item->Station as $station):
-        $areaName = $station->Name[0];
-      endforeach;
+    $areaName;
+    foreach ($item->Area as $area) :
+      $areaName = $area->Name[0];
+    endforeach;
+    foreach ($item->Station as $station) :
+      $areaName = $station->Name[0];
+    endforeach;
 
-      return in_array($areaName, $this->areaTags);
+    return in_array($areaName, $this->areaTags);
   }
 }
