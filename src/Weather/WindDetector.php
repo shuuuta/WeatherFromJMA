@@ -22,8 +22,6 @@ class WindDetector extends WeatherDetectorInterface
     $title = (string) $property->Type[0];
     if (in_array($title, $titlePattern)) :
 
-      $winds = [];
-
       if ($title === $titlePattern['detail']) :
         foreach ($property->WindSpeedPart->WindSpeedLevel as $windSpeed) :
           $attributes =  $windSpeed->attributes();
