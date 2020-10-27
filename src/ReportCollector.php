@@ -18,7 +18,7 @@ class ReportCollector
 
   public function __construct(string $targetDate = '')
   {
-    $this->date = $targetDate ? $this->setDate($targetDate) : new DateTime();
+    $this->setDate($targetDate);
     $this->reportList = new ReportList();
   }
 

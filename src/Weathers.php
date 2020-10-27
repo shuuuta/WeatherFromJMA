@@ -11,10 +11,11 @@ class Weathers implements IteratorAggregate
 
   public function __construct(array $areaTags, string $targetDate = '')
   {
-    $reportList = new ReportCollector($targetDate);
+    $reportCollector = new ReportCollector($targetDate);
+    $reportList = $reportCollector->getReports();
 
     $weatherCollector = new WeatherCollector($areaTags);
-    $weathers = $weatherCollector->loadReeports($reportList);
+    $this->weathers = $weatherCollector->loadReports($reportList);
   }
 
   public function getIterator(): ArrayIterator
