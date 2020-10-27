@@ -36,7 +36,7 @@ class WeatherCollector
 
     foreach ($reportList as $report) :
       $weatherList = $this->loadReport($report);
-      $weathers = array_merge($weathers, $this->getWeathers($weatherList));
+      $weathers = array_merge($weathers, $this->detectWeathers($weatherList));
     endforeach;
 
     return $weathers;
@@ -58,7 +58,7 @@ class WeatherCollector
     return $weatherList;
   }
 
-  private function getWeathers(array $weatherData): array
+  private function detectWeathers(array $weatherData): array
   {
     $weathers = [];
 
