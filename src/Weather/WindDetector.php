@@ -7,6 +7,11 @@ use SimpleXMLElement;
 
 class WindDetector extends WeatherDetectorInterface
 {
+  private array $detectedData = [
+    'overview' => [],
+    'detail' => [],
+  ];
+
   public function getWeather(array $weatherData): Wind
   {
     foreach ($weatherData as $data) :
@@ -31,17 +36,6 @@ class WindDetector extends WeatherDetectorInterface
       $winds = [];
 
       if ($title === $titlePattern['detail']) :
-        foreach ($property->WindDirectionPart->children('jmx_eb', true) as $windDirection) :
-          $timeId = (string)  $windDirection->attributes()->refID;
-          $date = $dateList[$timeId];
-          $value = (string) $windDirection;
-
-          $winds[$timeId] = [
-            'date' => $date,
-            'direction' => $value,
-          ];
-        endforeach;
-
         foreach ($property->WindSpeedPart->WindSpeedLevel as $windSpeed) :
           $attributes =  $windSpeed->attributes();
           $timeId = (string) $attributes->refID;
@@ -49,61 +43,48 @@ class WindDetector extends WeatherDetectorInterface
           $description =  (string) $attributes->description;
           $value = (string) $windSpeed;
 
-          $winds[$timeId] = array_merge( $winds[$timeId], [
+          $this->detectedData['detail'][$timeId] = [
             'date' => $date,
             'description' => $description,
             'speedLevel' => $value,
-          ]);
+          ];
         endforeach;
 
-        //var_dump($winds);
-        //foreach($winds as $windData) :
-        //  $wind->addDetail($windData);
-        //endforeach;
+        foreach ($property->WindDirectionPart->children('jmx_eb', true) as $windDirection) :
+          $timeId = (string)  $windDirection->attributes()->refID;
+          $date = $dateList[$timeId];
+          $value = (string) $windDirection;
+
+          $this->detectedData['detail'][$timeId]['direction'] = $value;
+        endforeach;
       endif;
 
       if ($title === $titlePattern['overview']) :
         foreach ($property->DetailForecast->WindForecastPart as $windPart) :
           $timeId =  (string) $windPart->attributes()->refID;
-          foreach ($windPart->Sentence as $sentence):
+          foreach ($windPart->Sentence as $sentence) :
             $date = $dateList[$timeId];
-            $value = $sentence;
 
-            //var_dump($value);
-            //$wind->addOverview($value, $date);
+            $this->detectedData['overview'][$timeId] = [
+              'date' => $date,
+              'sentence' => $sentence,
+            ];
           endforeach;
         endforeach;
       endif;
-
-
-
-      //foreach ($property->WeatherPart->children('jmx_eb', true) as $child) :
-      //foreach ($property->WeatherPart->children('jmx_eb', true) as $child) :
-      //  $timeId =  $child->attributes()->refID;
-      //  $date = $this->getContainerDate($timeId);
-      //  $value = (string) $child;
-
-      //  if ($title === $titlePattern['overview']) :
-      //    $wind->addOverview($value, $date);
-      //  elseif ($title === $titlePattern['overview']) :
-      //    $wind->addDetail($value, $date);
-      //  endif;
-      //endforeach;
     endif;
-
-    //return $wind;
   }
 
   protected function outputWeather(): Wind
   {
     $wind = new Wind();
 
-    //foreach ($this->detectedData['overview'] as $overview) :
-    //  $sky->addOverview($overview['value'], $overview['date']);
-    //endforeach;
-    //foreach ($this->detectedData['detail'] as $detail) :
-    //  $sky->addDetail($detail['value'], $detail['date']);
-    //endforeach;
+    foreach ($this->detectedData['overview'] as $overview) :
+      $wind->addOverview($overview['sentence'], $overview['date']);
+    endforeach;
+    foreach ($this->detectedData['detail'] as $detail) :
+      $wind->addDetail($detail);
+    endforeach;
 
     return $wind;
   }
