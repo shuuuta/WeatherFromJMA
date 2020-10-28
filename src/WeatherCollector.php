@@ -87,12 +87,14 @@ class WeatherCollector
         //  echo $areaName . PHP_EOL;
 
         foreach ($item->Kind as $kind) :
-          $property = $kind->Property[0];
-
           if (empty($weatherData)) :
             $weatherData['properties'] = [];
           endif;
-          $weatherData['properties'][] = $property;
+
+          $properties = $kind->Property;
+          foreach ($properties as $property) :
+            $weatherData['properties'][] = $property;
+          endforeach;
         endforeach;
       endif;
     endforeach;
