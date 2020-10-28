@@ -50,7 +50,7 @@ class WeatherCollector
 
     foreach ($xml->Body[0]->MeteorologicalInfos as $meteorologicalInfos) :
       foreach ($meteorologicalInfos->TimeSeriesInfo as $timeSeriesInfo) :
-        $weatherData = $this->getWeatherData($timeSeriesInfo);
+        $weatherData = $this->getPropertiesFromTimeSeriesInfo($timeSeriesInfo);
         $weatherList[] = $weatherData;
       endforeach;
     endforeach;
@@ -70,22 +70,12 @@ class WeatherCollector
     return $weathers;
   }
 
-  private function getWeatherData(SimpleXMLElement $TimeSeriesInfo): array
+  private function getPropertiesFromTimeSeriesInfo(SimpleXMLElement $TimeSeriesInfo): array
   {
     $weatherData = [];
 
     foreach ($TimeSeriesInfo->Item as $item) :
-      if ($this->isArea($item)) :
-        //dev: Itemないに何のエリアがあるか確認
-        //if (true):
-        //  foreach ($item->Area as $area):
-        //    $areaName = $area->Name[0];
-        //  endforeach;
-        //  foreach ($item->Station as $station):
-        //    $areaName = $station->Name[0];
-        //  endforeach;
-        //  echo $areaName . PHP_EOL;
-
+      if ($this->isInArea($item)) :
         foreach ($item->Kind as $kind) :
           if (empty($weatherData)) :
             $weatherData['properties'] = [];
@@ -121,7 +111,7 @@ class WeatherCollector
     return $timeList;
   }
 
-  private function isArea(SimpleXMLElement $item): bool
+  private function isInArea(SimpleXMLElement $item): bool
   {
     $areaName;
     foreach ($item->Area as $area) :

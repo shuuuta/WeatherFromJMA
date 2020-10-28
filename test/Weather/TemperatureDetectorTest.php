@@ -16,7 +16,6 @@ class TemperatureDetectorTest extends TestCase
     $detector =  new TemperatureDetector();
     $weather = $detector->getWeather($weatherList);
 
-    var_dump($weather);
     $this->assertInstanceOf(Temperature::class, $weather);
   }
 
