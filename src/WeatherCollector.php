@@ -11,7 +11,6 @@ class WeatherCollector
 {
   private $detectors = [
     SkyDetector::class,
-    WindDetector::class,
   ];
 
   private $areaTypeTags = [
@@ -64,7 +63,9 @@ class WeatherCollector
 
     foreach ($this->detectors as $detector) :
       $detector =  new $detector();
-      $weathers[] = $detector->getWeather($weatherData);
+      //$timeline = $detector->getTimeline($weatherData);
+      //$weathers[$timeline->getType()] = $timeline;
+      $weathers[] = $detector->getTimeline($weatherData);
     endforeach;
 
     return $weathers;

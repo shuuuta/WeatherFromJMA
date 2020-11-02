@@ -2,6 +2,37 @@
 
 ## Class Diagram
 
+
+```plantuml
+@startuml
+WeatherCollector <--o Weather.WeatherDetectorInterface
+
+class WeatherCollector
+
+namespace Weather {
+	WeatherDetectorInterface <-o Timeline
+	Timeline <--o WeatherInterface
+
+	class Timeline {
+	}
+
+	interface WeatherDetectorInterface
+	class SkyDetector implements WeatherDetectorInterface
+	class WindDetector implements WeatherDetectorInterface
+	class WaveDetector implements WeatherDetectorInterface
+	class RainDetector implements WeatherDetectorInterface
+	class TemperatureDetector implements WeatherDetectorInterface
+
+	interface WeatherInterface
+	class Sky implements WeatherInterface
+	class Wind implements WeatherInterface
+	class Wave implements WeatherInterface
+	class Rain implements WeatherInterface
+	class Temperature implements WeatherInterface
+}
+@enduml
+```
+
 ```plantuml
 @startuml
 WeatherCollector o-> WeathersInterface

@@ -7,7 +7,9 @@ use SimpleXMLElement;
 
 class SkyDetector extends WeatherDetectorInterface
 {
-  private array $detectedData = [
+  protected string $weatherClass = Sky::Class;
+
+  protected array $detectedData = [
     'overview' => [],
     'detail' => [],
   ];
@@ -18,9 +20,6 @@ class SkyDetector extends WeatherDetectorInterface
       'overview' => '天気',
       'detail' => '３時間内卓越天気',
     ];
-
-    // dev: Propertyに何のデータがあるかチェック
-    //echo $property->Type[0] . PHP_EOL;
 
     $title = (string) $property->Type[0];
     if (in_array($title, $titlePattern)) :
@@ -42,19 +41,5 @@ class SkyDetector extends WeatherDetectorInterface
         endif;
       endforeach;
     endif;
-  }
-
-  protected function outputWeather(): Sky
-  {
-    $sky = new Sky();
-
-    foreach ($this->detectedData['overview'] as $overview) :
-      $sky->addOverview($overview['value'], $overview['date']);
-    endforeach;
-    foreach ($this->detectedData['detail'] as $detail) :
-      $sky->addDetail($detail['value'], $detail['date']);
-    endforeach;
-
-    return $sky;
   }
 }
