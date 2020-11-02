@@ -4,34 +4,31 @@ namespace WeatherFromJMA\Weather;
 
 use DateTime;
 
-class Sky implements WeatherInterface
+class Sky extends WeatherInterface
 {
-  private $overviews = [];
-  private $details = [];
-
-  public function addOverview(string $value, DateTime $date) :void
+  protected function setOverview(array $data): void
   {
-    $this->overviews[] = [
-      'value' => $value,
-      'date' => $date,
-    ];
+    if (isset($data['value'])) :
+      $this->value = $data['value'];
+    else :
+      $this->value = '';
+    endif;
   }
 
-  public function addDetail(string $value, DateTime $date) :void
+  protected function setDetail(array $data): void
   {
-    $this->details[] = [
-      'value' => $value,
-      'date' => $date,
-    ];
+    if (isset($data['value'])) :
+      $this->value = $data['value'];
+    else :
+      $this->value = '';
+    endif;
   }
 
-  public function getDetails()
+  public function __get(string $name)
   {
+    if ('value' === $name) :
+      return $this->value;
+    endif;
+    return null;
   }
-
-  public function getOverviews()
-  {
-  }
-
-  // class名の取得(en ja)
 }

@@ -25,8 +25,7 @@ class Timeline implements IteratorAggregate
       throw new InvalidArgumentException('Input class is not exist. Input is ' . $className . '.');
     endif;
 
-    $class = new $className();
-    if (!$class instanceof WeatherInterface) :
+    if (WeatherInterface::class !== get_parent_class($className)) :
       throw new InvalidArgumentException('Input class is not instance of WeatherInterface. Input is ' . $className . '.');
     endif;
 
