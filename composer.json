@@ -1,4 +1,5 @@
 {
+    "name": "shuuuta/weatherfromjma",
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always"
     },
