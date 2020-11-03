@@ -3,23 +3,26 @@
 namespace WeatherFromJMA\Test\Weather;
 
 use PHPUnit\Framework\TestCase;
-use WeatherFromJMA\Weather\Wave;
 use WeatherFromJMA\Weather\WaveDetector;
 
 class WaveDetectorTest extends TestCase
 {
   use LoadReportTrait;
 
-  public function testGetWeatherReturnWaveClass()
+  public function testDetectorFindData()
   {
     $weatherList = $this->LoadReport();
     $detector =  new WaveDetector();
-    $weather = $detector->getWeather($weatherList);
+    $timeline = $detector->getTImeline($weatherList);
+    $this->assertSame(3, $timeline->count());
+    $this->assertSame(3, count($timeline->getOverviews()));
 
-    $this->assertInstanceOf(Wave::class, $weather);
-  }
+    foreach ($timeline as $weather):
+    $this->assertSame('3.0', $weather->value);
+    endforeach;
 
-  public function testReturnedWeatherHasCorrectData()
-  {
+    foreach ($timeline->getOverviews() as $weather):
+      $this->assertMatchesRegularExpression('/メートル/', $weather->value);
+    endforeach;
   }
 }

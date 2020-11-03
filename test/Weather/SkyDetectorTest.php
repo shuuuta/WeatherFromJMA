@@ -10,22 +10,20 @@ class SkyDetectorTest extends TestCase
 {
   use LoadReportTrait;
 
-  public function testGetWeatherNameReturnWeatherName()
-  {
-    $weatherName = SkyDetector::getWeatherName();
-    $this->assertSame('sky', $weatherName);
-  }
-
-  public function testGetWeatherReturnSkyClass()
+  public function testDetectorFindData()
   {
     $weatherList = $this->LoadReport();
     $detector =  new SkyDetector();
-    $weather = $detector->getWeather($weatherList);
+    $timeline = $detector->getTImeline($weatherList);
+    $this->assertSame(8, $timeline->count());
+    $this->assertSame(3, count($timeline->getOverviews()));
 
-    $this->assertInstanceOf(Sky::class, $weather);
-  }
+    foreach ($timeline as $weather):
+      $this->assertSame('くもり', $weather->value);
+    endforeach;
 
-  public function testReturnedWeatherHasCorrectData()
-  {
+    foreach ($timeline->getOverviews() as $weather):
+      $this->assertMatchesRegularExpression('/くもり/', $weather->value);
+    endforeach;
   }
 }

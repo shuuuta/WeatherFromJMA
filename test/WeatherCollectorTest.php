@@ -8,7 +8,7 @@ use WeatherFromJMA\WeatherCollector;
 
 class WeatherCollectorTest extends TestCase
 {
-  public function testLoadReports()
+  public function testGetWeathers()
   {
     $xml = simplexml_load_file(__DIR__ . '/sample/sample_03.xml');
     $reportList = new ReportList();
@@ -16,8 +16,9 @@ class WeatherCollectorTest extends TestCase
 
     $weatherCollector = new WeatherCollector(['八丈島', '伊豆諸島南部']);
     $weatherCollector->loadReports($reportList);
-    echo PHP_EOL . 'test' .PHP_EOL;
-    var_dump($weatherCollector);
+
+    $weathers = $weatherCollector->getWeathers();
+    $this->assertSame(5, count($weathers));
   }
 }
 

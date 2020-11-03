@@ -3,23 +3,26 @@
 namespace WeatherFromJMA\Test\Weather;
 
 use PHPUnit\Framework\TestCase;
-use WeatherFromJMA\Weather\Temperature;
 use WeatherFromJMA\Weather\TemperatureDetector;
 
 class TemperatureDetectorTest extends TestCase
 {
   use LoadReportTrait;
 
-  public function testGetWeatherReturnTemperatureClass()
+  public function testDetectorFindData()
   {
     $weatherList = $this->LoadReport();
     $detector =  new TemperatureDetector();
-    $weather = $detector->getWeather($weatherList);
+    $timeline = $detector->getTImeline($weatherList);
+    $this->assertSame(9, $timeline->count());
+    $this->assertSame(4, count($timeline->getOverviews()));
 
-    $this->assertInstanceOf(Temperature::class, $weather);
-  }
+    foreach ($timeline as $weather):
+      $this->assertTrue(19 <= (int) $weather->value);
+    endforeach;
 
-  public function testReturnedWeatherHasCorrectData()
-  {
+    foreach ($timeline->getOverviews() as $weather):
+      $this->assertMatchesRegularExpression('/気温/', $weather->value);
+    endforeach;
   }
 }

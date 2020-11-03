@@ -10,16 +10,22 @@ class WindDetectorTest extends TestCase
 {
   use LoadReportTrait;
 
-  public function testGetWeatherReturnWindClass()
+  public function testDetectorFindData()
   {
     $weatherList = $this->LoadReport();
     $detector =  new WindDetector();
-    $weather = $detector->getWeather($weatherList);
+    $timeline = $detector->getTImeline($weatherList);
+    $this->assertSame(8, $timeline->count());
+    $this->assertSame(3, count($timeline->getOverviews()));
 
-    $this->assertInstanceOf(Wind::class, $weather);
-  }
+    foreach ($timeline as $weather):
+      $this->assertSame('4', $weather->value);
+      $this->assertSame('北東', $weather->direction);
+      $this->assertSame('毎秒１０メートル以上', $weather->description);
+    endforeach;
 
-  public function testReturnedWeatherHasCorrectData()
-  {
+    foreach ($timeline->getOverviews() as $weather):
+      $this->assertMatchesRegularExpression('/やや強く/', $weather->value);
+    endforeach;
   }
 }
