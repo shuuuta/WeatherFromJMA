@@ -15,3 +15,11 @@ foreach ($weathers as $timeline) :
     echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->value . PHP_EOL;
   endforeach;
 endforeach;
+
+echo PHP_EOL . 'Overviews:' . PHP_EOL;
+foreach ($weathers as $timeline) :
+  echo $timeline->getType() . PHP_EOL;
+  foreach ($timeline->getOverviews() as $weather) :
+    echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->value . PHP_EOL;
+  endforeach;
+endforeach;
