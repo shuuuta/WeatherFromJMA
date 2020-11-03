@@ -55,6 +55,7 @@ class Timeline implements IteratorAggregate
 
   public function getOverviews(): array
   {
+    $this->sortByDate($this->overviews);
     return $this->overviews;
   }
 
