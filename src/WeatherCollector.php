@@ -65,6 +65,10 @@ class WeatherCollector
       $detector =  new $detector();
       $timeline = $detector->getTimeline($weatherData);
 
+      if (!$timeline) :
+        continue;
+      endif;
+
       if (isset($this->weathers[$timeline->getType()])) :
         $this->weathers[$timeline->getType()] = $timeline->mergeTimeline($this->weathers[$timeline->getType()]);
       else :
