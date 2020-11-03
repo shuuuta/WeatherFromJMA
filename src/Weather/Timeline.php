@@ -89,7 +89,7 @@ class Timeline implements IteratorAggregate
     });
   }
 
-  public function mergeTimeline(Timeline $timeline): void
+  public function mergeTimeline(Timeline $timeline): Timeline
   {
     foreach ($timeline as $weather) :
       $this->weathers[] = $weather;
@@ -98,5 +98,7 @@ class Timeline implements IteratorAggregate
     foreach ($timeline->getOverviews() as $weather) :
       $this->overviews[] = $weather;
     endforeach;
+
+    return $this;
   }
 }
