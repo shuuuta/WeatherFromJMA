@@ -10,9 +10,16 @@ echo PHP_EOL . 'Get weather data.' . PHP_EOL . PHP_EOL;
 $weathers = new Weathers(['八丈島', '伊豆諸島南部']);
 
 foreach ($weathers as $timeline) :
-  echo $timeline->getType() . PHP_EOL;
+  $weatherType = $timeline->getType();
+  echo $weatherType . PHP_EOL;
   foreach ($timeline as $weather) :
-    echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->value . PHP_EOL;
+    switch ($weatherType):
+      case 'rain':
+        echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->condition . ' | ' . $weather->value . PHP_EOL;
+        break;
+      default:
+        echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->value . PHP_EOL;
+    endswitch;
   endforeach;
 endforeach;
 

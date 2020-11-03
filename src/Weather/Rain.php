@@ -2,16 +2,38 @@
 
 namespace WeatherFromJMA\Weather;
 
-class Rain implements WeatherInterface
+class Rain extends WeatherInterface
 {
-  private $details = [];
+  private string $condition;
 
-  public function addDetail(array $waveData): void
+  public function setOverview(array $data): void
   {
-    $this->details[] = [
-      'condition' => isset($waveData['condition']) ? $waveData['condition'] : '',
-      'value' => isset($waveData['value']) ? $waveData['value'] : '',
-      'date' => $waveData['date'],
-    ];
+    if (isset($data['condition']) && isset($data['value'])) :
+      $this->value = $data['condition'] . 'の確率' . $data['value'] . '％';
+    else :
+      $this->value = '';
+    endif;
+
+    $this->condition = $data['condition'] ?? '';
+  }
+
+  public function setDetail(array $data): void
+  {
+    $this->value = $data['value'] ?? '';
+    $this->condition = $data['condition'] ?? '';
+  }
+
+  public function __get(string $name)
+  {
+    switch ($name):
+      case 'value':
+        return $this->value;
+        break;
+      case 'condition':
+        return $this->condition;
+        break;
+      default:
+        return null;
+    endswitch;
   }
 }

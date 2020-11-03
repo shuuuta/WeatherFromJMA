@@ -6,7 +6,9 @@ use SimpleXMLElement;
 
 class RainDetector extends WeatherDetectorInterface
 {
-  private array $detectedData = [
+  protected string $weatherClass = Rain::Class;
+  protected array $detectedData = [
+    'overview' => [],
     'detail' => [],
   ];
 
@@ -24,23 +26,14 @@ class RainDetector extends WeatherDetectorInterface
 
         $value = (string) $precipitation;
 
-        $this->detectedData['detail'][$timeId] = [
+        $values = [
           'date' => $date,
           'condition' => $condition,
           'value' => $value,
         ];
+        $this->detectedData['overview'][] = $values;
+        $this->detectedData['detail'][] = $values;
       endforeach;
     endif;
-  }
-
-  protected function outputWeather(): Rain
-  {
-    $rain = new Rain();
-
-    foreach ($this->detectedData['detail'] as $detail) :
-      $rain->addDetail($detail);
-    endforeach;
-
-    return $rain;
   }
 }
