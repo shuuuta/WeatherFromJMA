@@ -15,7 +15,8 @@ class Weathers implements IteratorAggregate
     $reportList = $reportCollector->getReports();
 
     $weatherCollector = new WeatherCollector($areaTags);
-    $this->weathers = $weatherCollector->loadReports($reportList);
+    $weatherCollector->loadReports($reportList);
+    $this->weathers = $weatherCollector->getWeathers();
   }
 
   public function getIterator(): ArrayIterator

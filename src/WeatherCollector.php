@@ -30,6 +30,11 @@ class WeatherCollector
     endforeach;
   }
 
+  public function getWeathers(): array
+  {
+    return $this->weathers;
+  }
+
   public function loadReports(ReportList $reportList): void
   {
     foreach ($reportList as $report) :
