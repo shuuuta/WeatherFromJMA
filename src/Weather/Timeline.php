@@ -36,6 +36,7 @@ class Timeline implements IteratorAggregate
   {
     $fullClassName = $this->class;
     $type = preg_replace('/^.+\\\([^\\\]+)$/', '$1', $fullClassName);
+    $type = strtolower($type);
     return $type;
   }
 
@@ -86,5 +87,16 @@ class Timeline implements IteratorAggregate
     usort($array, function ($first, $second) {
       return $first->getDate() < $second->getDate();
     });
+  }
+
+  public function mergeTimeline(Timeline $timeline): void
+  {
+    foreach ($timeline as $weather) :
+      $this->weathers[] = $weather;
+    endforeach;
+
+    foreach ($timeline->getOverviews() as $weather) :
+      $this->overviews[] = $weather;
+    endforeach;
   }
 }

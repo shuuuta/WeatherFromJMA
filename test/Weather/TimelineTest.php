@@ -37,13 +37,13 @@ class TimelineTest extends TestCase
 
   public function testGetTypeReturnClassNameWithoutNamespace()
   {
-    $timeLine = new TimeLine(Sky::class);
-    $this->assertSame('Sky', $timeLine->getType());
+    $timeline = new Timeline(Sky::class);
+    $this->assertSame('sky', $timeline->getType());
   }
 
   public function testAddWeather()
   {
-    $timeLine = new TimeLine(Sky::class);
+    $timeline = new Timeline(Sky::class);
 
     $samples = [
       [
@@ -57,22 +57,22 @@ class TimelineTest extends TestCase
     ];
 
     foreach ($samples as $sample) :
-      $timeLine->add($sample);
+      $timeline->add($sample);
     endforeach;
 
-    $this->assertSame(2, $timeLine->count());
+    $this->assertSame(2, $timeline->count());
 
-    foreach ($timeLine as $weather) :
+    foreach ($timeline as $weather) :
       $this->assertInstanceOf(Sky::class, $weather);
     endforeach;
   }
 
   public function testThrowInvalidArgumentWhenAddWeatherWithoutDate()
   {
-    $timeLine = new TimeLine(Sky::class);
+    $timeline = new Timeline(Sky::class);
     try {
       $flag = false;
-      $timeLine->add([
+      $timeline->add([
         'value' => 'without DateTime',
       ]);
     } catch (InvalidArgumentException $e) {
@@ -84,7 +84,7 @@ class TimelineTest extends TestCase
 
     try {
       $flag = false;
-      $timeLine->add([
+      $timeline->add([
         'date' => 'invalid Type',
         'value' => 'test value',
       ]);
@@ -98,7 +98,7 @@ class TimelineTest extends TestCase
 
   public function testTimelineReturnWeathersSortedByDate()
   {
-    $timeLine = new TimeLine(Sky::class);
+    $timeline = new Timeline(Sky::class);
 
     $timeOrder = [
       '2020-10-31',
@@ -121,17 +121,17 @@ class TimelineTest extends TestCase
     ];
 
     foreach ($samples as $sample) :
-      $timeLine->add($sample);
+      $timeline->add($sample);
     endforeach;
 
-    foreach ($timeLine as $i => $weather) :
+    foreach ($timeline as $i => $weather) :
       $this->assertSame($timeOrder[$i], $weather->getDate()->format('Y-m-d'));
     endforeach;
   }
 
   public function testAddWeatherOnOverviews()
   {
-    $timeLine = new TimeLine(Sky::class);
+    $timeline = new Timeline(Sky::class);
 
     $samples = [
       [
@@ -145,10 +145,10 @@ class TimelineTest extends TestCase
     ];
 
     foreach ($samples as $sample) :
-      $timeLine->addOverview($sample);
+      $timeline->addOverview($sample);
     endforeach;
 
-    $overviews = $timeLine->getOverviews();
+    $overviews = $timeline->getOverviews();
     $this->assertSame(2, count($overviews));
 
     foreach ($overviews as $weather) :
@@ -158,10 +158,10 @@ class TimelineTest extends TestCase
 
   public function testThrowInvalidArgumentWhenAddWeatherOnOverviewsWithoutDate()
   {
-    $timeLine = new TimeLine(Sky::class);
+    $timeline = new Timeline(Sky::class);
     try {
       $flag = false;
-      $timeLine->addOverview([
+      $timeline->addOverview([
         'value' => 'without DateTime',
       ]);
     } catch (InvalidArgumentException $e) {
@@ -173,7 +173,7 @@ class TimelineTest extends TestCase
 
     try {
       $flag = false;
-      $timeLine->addOverview([
+      $timeline->addOverview([
         'date' => 'invalid Type',
         'value' => 'test value',
       ]);
@@ -183,5 +183,46 @@ class TimelineTest extends TestCase
     } finally {
       $this->assertTrue($flag, 'Argument test failed.');
     }
+  }
+
+  public function testMergeTimeline()
+  {
+    $timeline = new Timeline(Sky::class);
+    $samples = [
+      [
+        'date' => new DateTime('2020-10-30 11:00'),
+        'value' => 'test value 11',
+      ],
+      [
+        'date' => new DateTime('2020-10-30 12:00'),
+        'value' => 'test value 12',
+      ],
+    ];
+    foreach ($samples as $sample) :
+      $timeline->addOverview($sample);
+      $timeline->add($sample);
+    endforeach;
+
+    $timeline2 = new Timeline(Sky::class);
+    $samples2 = [
+      [
+        'date' => new DateTime('2020-10-30 11:00'),
+        'value' => 'test value 11',
+      ],
+      [
+        'date' => new DateTime('2020-10-30 12:00'),
+        'value' => 'test value 12',
+      ],
+    ];
+    foreach ($samples2 as $sample) :
+      $timeline2->addOverview($sample);
+      $timeline2->add($sample);
+    endforeach;
+
+    $timeline->mergeTimeline($timeline2);
+
+    $this->assertSame(4, $timeline->count());
+    $overviews = $timeline->getOverviews();
+    $this->assertSame(4, count($overviews));
   }
 }
