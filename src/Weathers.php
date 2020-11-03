@@ -4,6 +4,7 @@ namespace WeatherFromJMA;
 
 use ArrayIterator;
 use IteratorAggregate;
+use WeatherFromJMA\Weather\Timeline;
 
 class Weathers implements IteratorAggregate
 {
@@ -17,6 +18,15 @@ class Weathers implements IteratorAggregate
     $weatherCollector = new WeatherCollector($areaTags);
     $weatherCollector->loadReports($reportList);
     $this->weathers = $weatherCollector->getWeathers();
+  }
+
+  public function __get($name): ?Timeline
+  {
+    if (isset($this->weathers[$name])) :
+      return $this->weathers[$name];
+    else :
+      return null;
+    endif;
   }
 
   public function getIterator(): ArrayIterator
