@@ -2,25 +2,29 @@
 
 namespace WeatherFromJMA\Weather;
 
-class Temperature implements WeatherInterface
+class Temperature extends WeatherInterface
 {
   private $details = [];
 
-  public function addOverview(array $data): void
+  public function setOverview(array $data): void
   {
-    $this->overviews[] = [
-      'type' => isset($data['type']) ? $data['type'] : '',
-      'name' => isset($data['name']) ? $data['name'] : '',
-      'value' => isset($data['value']) ? $data['value'] : '',
-      'date' => $data['date'],
-    ];
+    if (isset($data['title']) && isset($data['value'])) :
+      $this->value = $data['title'] . $data['value'] . '℃';
+    else :
+      $this->value = '';
+    endif;
   }
 
-  public function addDetail(array $data): void
+  public function setDetail(array $data): void
   {
-    $this->details[] = [
-      'value' => isset($data['value']) ? $data['value'] : '',
-      'date' => $data['date'],
-    ];
+    $this->value = $data['value'] ?? '';
+  }
+
+  public function __get(string $name)
+  {
+    if ('value' === $name) :
+      return $this->value;
+    endif;
+    return null;
   }
 }

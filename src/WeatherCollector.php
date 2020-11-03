@@ -6,6 +6,7 @@ use DateTime;
 use SimpleXMLElement;
 use WeatherFromJMA\Weather\RainDetector;
 use WeatherFromJMA\Weather\SkyDetector;
+use WeatherFromJMA\Weather\TemperatureDetector;
 use WeatherFromJMA\Weather\WindDetector;
 
 class WeatherCollector
@@ -14,6 +15,7 @@ class WeatherCollector
     SkyDetector::class,
     RainDetector::class,
     WindDetector::class,
+    TemperatureDetector::class,
   ];
   private $weathers = [];
 

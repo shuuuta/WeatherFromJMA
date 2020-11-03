@@ -6,7 +6,9 @@ use SimpleXMLElement;
 
 class TemperatureDetector extends WeatherDetectorInterface
 {
-  private array $detectedData = [
+  protected string $weatherClass = Temperature::Class;
+
+  protected array $detectedData = [
     'overview' => [],
     'detail' => [],
   ];
@@ -34,7 +36,7 @@ class TemperatureDetector extends WeatherDetectorInterface
         ) :
           $this->detectedData['overview'][] = [
             'type' => 'max',
-            'name' => $title,
+            'title' => $title,
             'value' => $value,
             'date' => $date,
           ];
@@ -44,7 +46,7 @@ class TemperatureDetector extends WeatherDetectorInterface
         ) :
           $this->detectedData['overview'][] = [
             'type' => 'min',
-            'name' => $title,
+            'title' => $title,
             'value' => $value,
             'date' => $date,
           ];
@@ -56,19 +58,5 @@ class TemperatureDetector extends WeatherDetectorInterface
         endif;
       endforeach;
     endif;
-  }
-
-  protected function outputWeather(): Temperature
-  {
-    $temperature = new Temperature();
-
-    foreach ($this->detectedData['overview'] as $overview) :
-      $temperature->addOverview($overview);
-    endforeach;
-    foreach ($this->detectedData['detail'] as $detail) :
-      $temperature->addDetail($detail);
-    endforeach;
-
-    return $temperature;
   }
 }
