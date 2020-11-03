@@ -16,6 +16,8 @@ class WeatherCollectorTest extends TestCase
 
     $weatherCollector = new WeatherCollector(['八丈島', '伊豆諸島南部']);
     $weatherCollector->loadReports($reportList);
+    echo PHP_EOL . 'test' .PHP_EOL;
+    var_dump($weatherCollector);
   }
 }
 

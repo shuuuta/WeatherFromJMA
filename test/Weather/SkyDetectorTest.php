@@ -10,6 +10,12 @@ class SkyDetectorTest extends TestCase
 {
   use LoadReportTrait;
 
+  public function testGetWeatherNameReturnWeatherName()
+  {
+    $weatherName = SkyDetector::getWeatherName();
+    $this->assertSame('sky', $weatherName);
+  }
+
   public function testGetWeatherReturnSkyClass()
   {
     $weatherList = $this->LoadReport();

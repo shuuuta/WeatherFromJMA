@@ -12,6 +12,7 @@ class WeatherCollector
   private $detectors = [
     SkyDetector::class,
   ];
+  private $weathers = [];
 
   private $areaTypeTags = [
     '地点予報',
@@ -29,16 +30,12 @@ class WeatherCollector
     endforeach;
   }
 
-  public function loadReports(ReportList $reportList): array
+  public function loadReports(ReportList $reportList): void
   {
-    $weathers = [];
-
     foreach ($reportList as $report) :
       $weatherList = $this->loadReport($report);
-      $weathers = array_merge($weathers, $this->detectWeathers($weatherList));
+      $this->detectWeathers($weatherList);
     endforeach;
-
-    return $weathers;
   }
 
   private function loadReport(Report $report): array
@@ -57,18 +54,18 @@ class WeatherCollector
     return $weatherList;
   }
 
-  private function detectWeathers(array $weatherData): array
+  private function detectWeathers(array $weatherData): void
   {
-    $weathers = [];
-
     foreach ($this->detectors as $detector) :
       $detector =  new $detector();
-      //$timeline = $detector->getTimeline($weatherData);
-      //$weathers[$timeline->getType()] = $timeline;
-      $weathers[] = $detector->getTimeline($weatherData);
-    endforeach;
+      $timeline = $detector->getTimeline($weatherData);
 
-    return $weathers;
+      if (isset($this->weathers[$timeline->getType()])) :
+        $this->weathers[$timeline->getType()] = $timeline->mergeTimeline($this->weathers[$timeline->getType()]);
+      else :
+        $this->weathers[$timeline->getType()] = $timeline;
+      endif;
+    endforeach;
   }
 
   private function getPropertiesFromTimeSeriesInfo(SimpleXMLElement $TimeSeriesInfo): array
