@@ -7,7 +7,9 @@ use SimpleXMLElement;
 
 class WindDetector extends WeatherDetectorInterface
 {
-  private array $detectedData = [
+  protected string $weatherClass = Wind::Class;
+
+  protected array $detectedData = [
     'overview' => [],
     'detail' => [],
   ];
@@ -33,7 +35,7 @@ class WindDetector extends WeatherDetectorInterface
           $this->detectedData['detail'][$timeId] = [
             'date' => $date,
             'description' => $description,
-            'speedLevel' => $value,
+            'value' => $value,
           ];
         endforeach;
 
@@ -54,25 +56,11 @@ class WindDetector extends WeatherDetectorInterface
 
             $this->detectedData['overview'][$timeId] = [
               'date' => $date,
-              'sentence' => $sentence,
+              'value' => $sentence,
             ];
           endforeach;
         endforeach;
       endif;
     endif;
-  }
-
-  protected function outputWeather(): Wind
-  {
-    $wind = new Wind();
-
-    foreach ($this->detectedData['overview'] as $overview) :
-      $wind->addOverview($overview['sentence'], $overview['date']);
-    endforeach;
-    foreach ($this->detectedData['detail'] as $detail) :
-      $wind->addDetail($detail);
-    endforeach;
-
-    return $wind;
   }
 }

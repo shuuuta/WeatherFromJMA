@@ -17,6 +17,9 @@ foreach ($weathers as $timeline) :
       case 'rain':
         echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->condition . ' | ' . $weather->value . PHP_EOL;
         break;
+      case 'wind':
+        echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->description . ' | ' . $weather->direction . ' | Level ' . $weather->value . PHP_EOL;
+        break;
       default:
         echo '  ' . $weather->getDate()->format('Ymd H:i') . ' : ' . $weather->value . PHP_EOL;
     endswitch;

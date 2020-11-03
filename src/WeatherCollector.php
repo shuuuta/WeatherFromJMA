@@ -13,6 +13,7 @@ class WeatherCollector
   private $detectors = [
     SkyDetector::class,
     RainDetector::class,
+    WindDetector::class,
   ];
   private $weathers = [];
 

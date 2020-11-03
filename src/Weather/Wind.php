@@ -4,39 +4,37 @@ namespace WeatherFromJMA\Weather;
 
 use DateTime;
 
-class Wind implements WeatherInterface
+class Wind extends WeatherInterface
 {
-  private $overviews = [];
-  private $details = [];
+  private string $direction = '';
+  private string $description = '';
 
-  public function addOverview(string $value, DateTime $date): void
+  public function setOverview(array $data): void
   {
-    $this->overviews[] = [
-      'value' => $value,
-      'date' => $date,
-    ];
+    $this->value = $data['value']??'';
   }
 
-  public function addDetail(array $windData): void
+  public function setDetail(array $data): void
   {
-    $this->details[] = [
-      'description' => isset($windData['description']) ? $windData['description'] : '',
-      'speedLevel' => isset($windData['speedLevel']) ? $windData['speedLevel'] : '',
-      'direction' => $windData['direction'],
-      'date' => $windData['date'],
-    ];
+    $this->value = $data['value'] ?? '';
+    $this->direction = $data['direction'] ?? '';
+    $this->description = $data['description'] ?? '';
   }
 
-  public function getDetails()
+  public function __get(string $name)
   {
+    switch ($name):
+      case 'value':
+        return $this->value;
+        break;
+      case 'direction':
+        return $this->direction;
+        break;
+      case 'description':
+        return $this->description;
+        break;
+      default:
+        return null;
+    endswitch;
   }
-
-  public function getOverviews()
-  {
-  }
-
-  // class名の取得(en ja)
-
-  // minSpeed()
-  // maxSpeed()
 }
