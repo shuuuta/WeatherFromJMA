@@ -4,38 +4,26 @@ namespace WeatherFromJMA\Weather;
 
 use DateTime;
 
-class Wave implements WeatherInterface
+class Wave extends WeatherInterface
 {
-  private $overviews = [];
-  private $details = [];
-
-  public function addOverview(string $value, DateTime $date): void
+  public function setOverview(array $data): void
   {
-    $this->overviews[] = [
-      'value' => $value,
-      'date' => $date,
-    ];
+    $this->value = $data['value']??'';
   }
 
-  public function addDetail(array $waveData): void
+  public function setDetail(array $data): void
   {
-    $this->details[] = [
-      'condition' => isset($waveData['condition']) ? $waveData['condition'] : '',
-      'value' => isset($waveData['value']) ? $waveData['value'] : '',
-      'date' => $waveData['date'],
-    ];
+    $this->value = $data['value'] ?? '';
   }
 
-  public function getDetails()
+  public function __get(string $name)
   {
+    switch ($name):
+      case 'value':
+        return $this->value;
+        break;
+      default:
+        return null;
+    endswitch;
   }
-
-  public function getOverviews()
-  {
-  }
-
-  // class名の取得(en ja)
-
-  // minSpeed()
-  // maxSpeed()
 }

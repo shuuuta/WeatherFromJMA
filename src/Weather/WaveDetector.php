@@ -7,7 +7,9 @@ use SimpleXMLElement;
 
 class WaveDetector extends WeatherDetectorInterface
 {
-  private array $detectedData = [
+  protected string $weatherClass = Wave::Class;
+
+  protected array $detectedData = [
     'overview' => [],
     'detail' => [],
   ];
@@ -25,34 +27,17 @@ class WaveDetector extends WeatherDetectorInterface
         $sentence = $part->Sentence;
 
         $waveHeight = $part->Base->children('jmx_eb', true);
-        $waveHeightAttributes = $waveHeight->attributes();
-        $condition = (string) $waveHeightAttributes->condition;
         $value = (string) $waveHeight;
 
         $this->detectedData['detail'][$timeId] = [
           'date' => $date,
-          'condition' => $condition,
           'value' => $value,
         ];
         $this->detectedData['overview'][$timeId] = [
           'date' => $date,
-          'sentence' => $sentence,
+          'value' => $sentence,
         ];
       endforeach;
     endif;
-  }
-
-  protected function outputWeather(): Wave
-  {
-    $wave = new Wave();
-
-    foreach ($this->detectedData['overview'] as $overview) :
-      $wave->addOverview($overview['sentence'], $overview['date']);
-    endforeach;
-    foreach ($this->detectedData['detail'] as $detail) :
-      $wave->addDetail($detail);
-    endforeach;
-
-    return $wave;
   }
 }

@@ -7,6 +7,7 @@ use SimpleXMLElement;
 use WeatherFromJMA\Weather\RainDetector;
 use WeatherFromJMA\Weather\SkyDetector;
 use WeatherFromJMA\Weather\TemperatureDetector;
+use WeatherFromJMA\Weather\WaveDetector;
 use WeatherFromJMA\Weather\WindDetector;
 
 class WeatherCollector
@@ -16,6 +17,7 @@ class WeatherCollector
     RainDetector::class,
     WindDetector::class,
     TemperatureDetector::class,
+    WaveDetector::class,
   ];
   private $weathers = [];
 
