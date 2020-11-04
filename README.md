@@ -1,5 +1,9 @@
 # WeatherFromJMA
 
+## Requirement
+
+- PHP 7.4+
+
 ## Example
 
 ```
