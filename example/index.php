@@ -5,9 +5,11 @@ use WeatherFromJMA\Weathers;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$targetDate = new DateTime($argv[1]??'');
+
 echo PHP_EOL . 'Get weather data.' . PHP_EOL . PHP_EOL;
 
-$weathers = new Weathers(['八丈島', '伊豆諸島南部']);
+$weathers = new Weathers(['八丈島', '伊豆諸島南部'], $targetDate->format('Y-m-d'));
 
 foreach ($weathers as $timeline) :
   $weatherType = $timeline->getType();
